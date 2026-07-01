@@ -1,6 +1,6 @@
 Table roles {
   id int [pk, increment]
-  role_name varchar(50) [unique, not null]
+  name varchar(50) [unique, not null]
   description text
   created_at timestamp
 }
