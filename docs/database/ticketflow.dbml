@@ -1,0 +1,137 @@
+Table roles {
+  id int [pk, increment]
+  role_name varchar(50) [unique, not null]
+  description text
+  created_at timestamp
+}
+
+Table users {
+  id int [pk, increment]
+  uuid char(36) [unique, not null]
+
+  role_id int [not null]
+
+  first_name varchar(100) [not null]
+  last_name varchar(100) [not null]
+
+  email varchar(255) [unique, not null]
+  password_hash varchar(255) [not null]
+  phone varchar(20)
+
+  is_active boolean [default: true]
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table ticket_statuses {
+  id int [pk, increment]
+  status_name varchar(50) [unique]
+  description text
+}
+
+Table ticket_priorities {
+  id int [pk, increment]
+  priority_name varchar(50) [unique]
+  description text
+}
+
+Table ticket_categories {
+  id int [pk, increment]
+  category_name varchar(100) [unique]
+  description text
+}
+
+Table tickets {
+  id int [pk, increment]
+  uuid char(36) [unique]
+
+  title varchar(255)
+  description text
+
+  created_by int
+  assigned_to int
+
+  status_id int
+  priority_id int
+  category_id int
+
+  created_at timestamp
+  updated_at timestamp
+  resolved_at timestamp
+}
+
+Table ticket_comments {
+  id int [pk, increment]
+
+  ticket_id int
+  user_id int
+
+  comment text
+
+  created_at timestamp
+}
+
+Table attachments {
+  id int [pk, increment]
+
+  ticket_id int
+  uploaded_by int
+
+  original_name varchar(255)
+  stored_name varchar(255)
+
+  mime_type varchar(100)
+
+  file_size bigint
+
+  uploaded_at timestamp
+}
+
+Table ticket_assignments {
+  id int [pk, increment]
+
+  ticket_id int
+
+  assigned_to int
+  assigned_by int
+
+  assigned_at timestamp
+}
+
+Table audit_logs {
+  id int [pk, increment]
+
+  user_id int
+
+  action varchar(255)
+
+  entity_type varchar(100)
+
+  entity_id int
+
+  description text
+
+  created_at timestamp
+}
+
+Ref: users.role_id > roles.id
+
+Ref: tickets.created_by > users.id
+Ref: tickets.assigned_to > users.id
+
+Ref: tickets.status_id > ticket_statuses.id
+Ref: tickets.priority_id > ticket_priorities.id
+Ref: tickets.category_id > ticket_categories.id
+
+Ref: ticket_comments.ticket_id > tickets.id
+Ref: ticket_comments.user_id > users.id
+
+Ref: attachments.ticket_id > tickets.id
+Ref: attachments.uploaded_by > users.id
+
+Ref: ticket_assignments.ticket_id > tickets.id
+Ref: ticket_assignments.assigned_to > users.id
+Ref: ticket_assignments.assigned_by > users.id
+
+Ref: audit_logs.user_id > users.id
