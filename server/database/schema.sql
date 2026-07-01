@@ -146,4 +146,104 @@ CREATE TABLE tickets (
         REFERENCES ticket_categories(id)
 );
 
+-- Ticket Comments
 
+CREATE TABLE ticket_comments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    ticket_id INT NOT NULL,
+
+    user_id INT NOT NULL,
+
+    comment TEXT NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TIMESTAMP
+        DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_comments_ticket
+        FOREIGN KEY (ticket_id)
+        REFERENCES tickets(id),
+
+    CONSTRAINT fk_comments_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+);
+
+--Attachments
+
+CREATE TABLE attachments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    ticket_id INT NOT NULL,
+
+    uploaded_by INT NOT NULL,
+
+    original_name VARCHAR(255) NOT NULL,
+
+    stored_name VARCHAR(255) NOT NULL,
+
+    mime_type VARCHAR(100) NOT NULL,
+
+    file_size BIGINT NOT NULL,
+
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_attachments_ticket
+        FOREIGN KEY (ticket_id)
+        REFERENCES tickets(id),
+
+    CONSTRAINT fk_attachments_user
+        FOREIGN KEY (uploaded_by)
+        REFERENCES users(id)
+);
+
+--Ticket Assignments
+
+CREATE TABLE ticket_assignments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    ticket_id INT NOT NULL,
+
+    assigned_to INT NOT NULL,
+
+    assigned_by INT NOT NULL,
+
+    assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_assignment_ticket
+        FOREIGN KEY (ticket_id)
+        REFERENCES tickets(id),
+
+    CONSTRAINT fk_assignment_to
+        FOREIGN KEY (assigned_to)
+        REFERENCES users(id),
+
+    CONSTRAINT fk_assignment_by
+        FOREIGN KEY (assigned_by)
+        REFERENCES users(id)
+);
+
+--Audit Logs
+
+CREATE TABLE audit_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    user_id INT NOT NULL,
+
+    action VARCHAR(100) NOT NULL,
+
+    entity_type VARCHAR(100) NOT NULL,
+
+    entity_id INT NOT NULL,
+
+    description TEXT,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_audit_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+);
