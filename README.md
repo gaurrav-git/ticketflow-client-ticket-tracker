@@ -13,4 +13,10 @@ A role-based client ticket management system built with Node.js, Express.js and 
 
 ## Status
 
-🚧 Under Development
+## Current Sprint
+
+Sprint 2 – Backend Foundation 
+
+## Next Sprint
+
+Sprint 3 – Database Design
