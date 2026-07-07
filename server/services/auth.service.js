@@ -1,9 +1,20 @@
+const userRepository = require("../repositories/user.repository");
+
 const registerUser = async (userData) => {
-    console.log("📦 Service Layer Reached");
+
+    const existingUser =
+        await userRepository.findUserByEmail(userData.email);
+
+    if (existingUser) {
+        return {
+            success: false,
+            message: "Email already registered."
+        };
+    }
 
     return {
         success: true,
-        message: "Service layer reached successfully.",
+        message: "Email available.",
         data: userData
     };
 };
