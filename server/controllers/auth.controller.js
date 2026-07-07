@@ -1,11 +1,13 @@
-const registerUser = async (req, res) => {
-    console.log("📥 Register Request Received");
-    console.log(req.body);
+const authService = require("../services/auth.service");
 
-    res.status(200).json({
-        success: true,
-        message: "Controller reached successfully."
-    });
+const registerUser = async (req, res, next) => {
+    try {
+        const result = await authService.registerUser(req.body);
+
+        res.status(201).json(result);
+    } catch (error) {
+        next(error);
+    }
 };
 
 module.exports = {
