@@ -1,3 +1,4 @@
+const errorHandler = require("./middleware/error.middleware");
 const express = require("express");
 
 const authRoutes = require("./routes/auth.routes");
@@ -33,4 +34,5 @@ app.use((req, res) => {
     });
 });
 
+app.use(errorHandler);
 module.exports = app;
