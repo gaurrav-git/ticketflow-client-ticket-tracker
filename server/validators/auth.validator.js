@@ -37,6 +37,19 @@ const registerValidation = [
         .withMessage("Password must contain one special character.")
 ];
 
+const loginValidation = [
+    body("email")
+        .trim()
+        .notEmpty()
+        .withMessage("Email is required.")
+        .isEmail()
+        .withMessage("Invalid email address."),
+
+    body("password")
+        .notEmpty()
+        .withMessage("Password is required.")
+];
+
 const validate = (req, res, next) => {
     const errors = validationResult(req);
 
@@ -53,5 +66,6 @@ const validate = (req, res, next) => {
 
 module.exports = {
     registerValidation,
+    loginValidation,
     validate
 };

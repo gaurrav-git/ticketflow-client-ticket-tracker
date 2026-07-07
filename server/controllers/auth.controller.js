@@ -1,5 +1,5 @@
+const ApiResponse = require("../utils/apiResponse");
 const authService = require("../services/auth.service");
-
 const registerUser = async (req, res, next) => {
     try {
         const result = await authService.registerUser(req.body);
@@ -10,6 +10,21 @@ const registerUser = async (req, res, next) => {
     }
 };
 
+const loginUser = async (req, res, next) => {
+    try {
+
+        res.status(200).json(
+            ApiResponse.success(
+                "Login endpoint reached successfully."
+            )
+        );
+
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
-    registerUser
+    registerUser,
+    loginUser
 };
