@@ -1,7 +1,8 @@
 const { v4: uuidv4 } = require("uuid");
-
 const userRepository = require("../repositories/user.repository");
 const passwordUtil = require("../utils/password");
+const jwtUtil = require("../utils/jwt");
+const ApiError = require("../utils/apiError");
 
 const registerUser = async (userData) => {
 
@@ -44,6 +45,50 @@ const registerUser = async (userData) => {
     };
 };
 
+const loginUser = async (credentials) => {
+
+    const user = await userRepository.findUserForLogin(
+        credentials.email
+    );
+    if (!user) {
+    throw new ApiError(
+        401,
+        "Invalid email or password."
+    );
+}
+    const isPasswordValid =
+    await passwordUtil.comparePassword(
+        credentials.password,
+        user.password_hash
+    );
+
+    if (!isPasswordValid) {
+    throw new ApiError(
+        401,
+        "Invalid email or password."
+    );
+}
+
+    const token = jwtUtil.generateToken({
+    id: user.id,
+    uuid: user.uuid,
+    roleId: user.role_id
+});
+
+    return {
+    user: {
+        id: user.id,
+        uuid: user.uuid,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        email: user.email,
+        roleId: user.role_id
+    },
+    token
+    };
+};
+
 module.exports = {
-    registerUser
+    registerUser,
+    loginUser
 };
